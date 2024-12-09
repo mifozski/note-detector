@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Note Recorder with Noise Gate</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    #note { font-size: 2em; color: blue; }
+    #recordedNotes { margin-top: 20px; font-size: 1.2em; color: darkgreen; }
+    button { margin-top: 10px; padding: 10px 20px; font-size: 1em; }
+  </style>
+</head>
+<body>
+  <h1>Note Recorder with Noise Gate</h1>
+  <p>Detected Note: <span id="note">Click Start to Begin</span></p>
+  <button id="startButton">Start</button>
+  <p id="recordedNotes">Recorded Notes: <span id="notes">None</span></p>
+  
+  <script>
+    async function setupAudio() {
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const analyser = audioContext.createAnalyser();
+      analyser.fftSize = 2048; // Frequency resolution
+      const bufferLength = analyser.frequencyBinCount;
+      const frequencyData = new Float32Array(bufferLength);
+      const timeDomainData = new Uint8Array(bufferLength);
+
+      // Noise and volume gate settings
+      const noiseThreshold = -60; // dB (below this, consider as noise)
+      const volumeThreshold = 20; // Amplitude threshold for detecting sound
+
+      // Get microphone input
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const source = audioContext.createMediaStreamSource(stream);
+      source.connect(analyser);
+
+      const noteDisplay = document.getElementById('note');
+      const notesDisplay = document.getElementById('notes');
+      const recordedNotes = [];
+      let lastNote = null; // To avoid duplicate recording
+
+      function frequencyToNoteName(frequency) {
+        const noteNames = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+        const noteNumber = Math.round(12 * Math.log2(frequency / 440)) + 69;
+        const octave = Math.floor(noteNumber / 12) - 1;
+        const noteIndex = noteNumber % 12;
+        return `${noteNames[noteIndex]}${octave}`;
+      }
+
+      function detectNote() {
+        analyser.getFloatFrequencyData(frequencyData);
+        analyser.getByteTimeDomainData(timeDomainData);
+
+        // Check if the volume exceeds the threshold
+        const volume = Math.max(...timeDomainData) - 128; // Centered around 128
+        if (volume < volumeThreshold) {
+          noteDisplay.textContent = "Silent...";
+          requestAnimationFrame(detectNote);
+          return;
+        }
+
+        // Find the peak frequency above the noise threshold
+        let maxIndex = 0;
+        let maxAmplitude = noiseThreshold; // dB threshold
+        for (let i = 0; i < bufferLength; i++) {
+          if (frequencyData[i] > maxAmplitude) {
+            maxAmplitude = frequencyData[i];
+            maxIndex = i;
+          }
+        }
+
+        // Convert the peak index to a frequency
+        const nyquist = audioContext.sampleRate / 2;
+        const frequency = (maxIndex / bufferLength) * nyquist;
+
+        if (frequency > 20) { // Filter out inaudible frequencies
+          const detectedNote = frequencyToNoteName(frequency);
+
+          if (detectedNote !== lastNote) { // Check for new notes
+            lastNote = detectedNote;
+            noteDisplay.textContent = `${detectedNote} (${frequency.toFixed(1)} Hz)`;
+
+            // Record the note
+            recordedNotes.push(detectedNote);
+            notesDisplay.textContent = recordedNotes.join(', ');
+          }
+        }
+
+        requestAnimationFrame(detectNote);
+      }
+
+      detectNote();
+    }
+
+    document.getElementById('startButton').addEventListener('click', () => {
+      setupAudio().catch(error => {
+        console.error("Error accessing audio:", error);
+        alert("Could not access microphone. Please check your permissions.");
+      });
+      document.getElementById('startButton').style.display = 'none';
+    });
+  </script>
+</body>
+</html>

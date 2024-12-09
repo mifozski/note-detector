@@ -1,0 +1,12 @@
+{
+  "description": "A small app for detecting notes from the microphone audio input",
+  "scripts": {
+    "start": "simple-dev-server"
+  },
+  "devDependencies": {
+    "simple-dev-server": "^3.0.1"
+  },
+  "dependencies": {
+    "wavesurfer.js": "^7.8.10"
+  }
+}
