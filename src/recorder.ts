@@ -113,6 +113,7 @@ export async function setupAudio() {
 
   // Match detected notes to chords
   function matchChord(detectedNotes: string[]) {
+    console.log('notes:', detectedNotes);
     for (const [chordName, chordNotes] of Object.entries(chords)) {
       if (chordNotes.every(note => detectedNotes.includes(note))) {
         return chordName;

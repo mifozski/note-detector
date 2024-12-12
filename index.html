@@ -14,9 +14,22 @@
 </head>
 <body>
   <h1>Note Recorder with Noise Gate</h1>
-  <p>Detected Note: <span id="note">Click Start to Begin</span></p>
+  <p>Detected Chord: <span id="chord">Click Start to Begin</span></p>
   <button id="startButton">Start</button>
   <p id="recordedNotes">Recorded Notes: <span id="notes">None</span></p>
+
+  <button id="record">Record</button>
+  <button id="pause" style="display: none;">Pause</button>
+
+  <select id="mic-select">
+    <option value="" hidden>Select mic</option>
+  </select>
+
+  <p id="progress">00:00</p>
+
+  <div id="mic" style="border: 1px solid #ddd; border-radius: 4px; margin-top: 1rem"></div>
+
+  <canvas id="frequencyChart" width="800" height="400"></canvas>
   <div id="waveform"></div>
   <script type="module" src="/src/main.ts"></script>
 </body>

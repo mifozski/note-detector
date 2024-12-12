@@ -1,4 +1,5 @@
 import { setupAudio } from './recorder';
+import './spectrogram';
 import './style.css';
 import { init as initWaveDrawer } from './wave-drawer';
 
