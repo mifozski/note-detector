@@ -1,7 +1,10 @@
+import { initAnalyzer } from './analyzer';
 import { setupAudio } from './recorder';
 import './spectrogram';
 import './style.css';
 import { init as initWaveDrawer } from './wave-drawer';
+
+initAnalyzer();
 
 document.getElementById('startButton')!.addEventListener('click', () => {
   setupAudio().catch(error => {

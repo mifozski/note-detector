@@ -13,6 +13,7 @@
   </style>
 </head>
 <body>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <h1>Note Recorder with Noise Gate</h1>
   <p>Detected Chord: <span id="chord">Click Start to Begin</span></p>
   <button id="startButton">Start</button>
@@ -31,6 +32,15 @@
 
   <canvas id="frequencyChart" width="800" height="400"></canvas>
   <div id="waveform"></div>
+  <audio id="audioPlayer" controls>
+    <source id="audio-source" src="/328857_230356-lq.mp3" type="audio/mp3" />
+  </audio>
+  <button id="btn">Start</button>
+  <div id="plotDiv"></div>
+  <div id="results">
+    <div id="chord" style="font-size: 150px"></div>
+    <div id="strength" style="font-size: 20px"></div>
+  </div>
   <script type="module" src="/src/main.ts"></script>
 </body>
 </html>

@@ -1,11 +1,10 @@
 {
-	"editor.tabSize": 2,
-	"editor.formatOnSave": true,
-	"editor.codeActionsOnSave": {
-		"source.organizeImports": "explicit",
-		"source.fixAll": "never"
-	},
-	"editor.defaultFormatter": "dbaeumer.vscode-eslint",
-	"editor.emptySelectionClipboard": false,
-	"eslint.format.enable": true,
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "never"
+  },
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.emptySelectionClipboard": false,
+  "eslint.format.enable": true
 }

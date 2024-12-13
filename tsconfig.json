@@ -18,7 +18,12 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
 
-    "types": ["./types/declarations.d.ts"]
+    "types": [
+      "./types/declarations.d.ts",
+      "./node_modules/essentia.js/dist/core_api.d.ts",
+      "./node_modules/essentia.js/dist/extractor/extractor.d.ts",
+      "./node_modules/essentia.js/dist/display/plot.d.ts"
+    ]
   },
   "include": ["src"],
 }
